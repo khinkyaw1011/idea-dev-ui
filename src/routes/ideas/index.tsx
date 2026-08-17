@@ -1,9 +1,8 @@
 import { createFileRoute ,Link} from '@tanstack/react-router'
 import { Lightbulb } from 'lucide-react'
 import { queryOptions,useSuspenseQuery } from '@tanstack/react-query'
-
-import { fetchIdeas } from '../../api/ideas'
 import IdeaCard from '../../components/IdeaCard'
+import { fetchIdeas } from '../../api/ideas'
 export const Route = createFileRoute('/ideas/')({
   component: HomePage,
   loader:({context})=>context.queryClient.ensureQueryData(ideaQueryOptions)
@@ -29,25 +28,27 @@ function HomePage() {
 
   <section className="flex-1">
     <h2 className="text-2xl font-semibold mb-4 text-gray-800">Latest Ideas</h2>
-    <div className="space-y-6">
-      {latestIdea.map((idea)=>(
-          
-      <IdeaCard key={idea.id} idea={idea} button={false}/>
-     
-      ))}
-      
-    </div>
-
-    <div className="mt-6">
-      <a
-        href="/ideas"
-        className="w-full text-center inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-md transition"
-      >
-        View All Ideas
-      </a>
-    </div>
+    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {ideas.map((idea) => (
+          <li
+            key={idea.id}
+            className="border border-gray-300 p-4 rounded shadow bg-white flex flex-col justify-between"
+          >
+            <div>
+              <h2 className="text-lg font-semibold">{idea.title}</h2>
+              <p className="text-gray-700 mt-2">{idea.summary}</p>
+            </div>
+            <Link
+              to="/ideas/$ideaId"
+              params={{ ideaId: idea.id.toString() }}
+              className="text-center mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            >
+              View Idea
+            </Link>
+          </li>
+        ))}
+      </ul>
   </section>
 </div>
-
 
 }

@@ -1,56 +1,44 @@
-import {
-  createFileRoute,
-  Link,
-} from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { queryOptions,useSuspenseQuery } from '@tanstack/react-query'
+import { fetchIdeas } from '../api/ideas';
+import IdeaCard from '../components/IdeaCard';
 
-import {
-  queryOptions,
-  useSuspenseQuery,
-} from '@tanstack/react-query'
-import { fetchIdea } from '../api/ideas'
 
-const ideaQueryOptions = (ideaId: string) =>
+
+const ideasQueryOptions = () =>
   queryOptions({
-    queryKey: ['idea', ideaId],
-    queryFn: () => fetchIdea(ideaId),
-  })
-
+    queryKey: ['ideas'],
+    queryFn: () => fetchIdeas(),
+  });
 export const Route = createFileRoute('/')({
-  component: IdeaDetailsPage,
-
-  loader: async ({ params, context: { queryClient } }) => {
-    return queryClient.ensureQueryData(
-      ideaQueryOptions(params.ideaId)
-    )
+  component: IdeaPage,
+  loader: async ({ context: { queryClient } }) => {
+    return queryClient.ensureQueryData(ideasQueryOptions());
   },
+
 })
 
-function IdeaDetailsPage() {
-  const { ideaId } = Route.useParams()
+function IdeaPage() {
 
-  const { data: idea } = useSuspenseQuery(
-    ideaQueryOptions(ideaId)
-  )
-
-  return (
-    <div className="p-4">
-      <Link
-        to="/ideas"
-        className="text-blue-500 underline block mb-4"
-      >
-        Back To Ideas
-      </Link>
-
-      <h2 className="text-2xl font-bold">
-        {idea.title}
-      </h2>
-
-      <p className="mt-2">
-        {idea.description}
-      </p>
+  const { data } = useSuspenseQuery(ideasQueryOptions())
+  // ရက်စွဲအသစ်ဆုံးကို ထိပ်ဆုံးမှာ ထားခြင်း
+  const ideas = [...data].sort(
+  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+  return <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Ideas</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {ideas.map((idea) => (
+        <IdeaCard  key={idea.id} idea={idea}/>
+        ))}
+      </div>
     </div>
-  )
 }
+
+
+
+
+
 
 
 
