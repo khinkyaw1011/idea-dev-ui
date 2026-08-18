@@ -25,18 +25,6 @@
       "createdAt": "2025-04-28T14:30:00.000Z"
     },
     {
-      "id": "3",
-      "title": "Micro-SaaS for Freelancers",
-      "summary": "A personal dashboard to manage freelance work.",
-      "description": "A lightweight SaaS platform that helps freelancers track their clients, invoices, contracts, and income in one place. Built specifically for solopreneurs who don’t need bulky CRM tools but want visibility into their business and finances. Includes tax estimates, recurring invoice reminders, and expense logging.",
-      "tags": [
-        "freelance",
-        "saas",
-        "tools"
-      ],
-      "createdAt": "2025-04-29T09:15:00.000Z"
-    },
-    {
       "id": "4",
       "title": "Virtual Closet Organizer",
       "summary": "Your wardrobe, digitized and AI-personalized.",
@@ -73,7 +61,7 @@
       "createdAt": "2025-04-24T13:10:00.000Z"
     },
     {
-      "title": "Brad idea",
+      "title": "hello Brad idea",
       "summary": "Say something I wanna be programmer",
       "description": "Can you say me something",
       "tags": [
@@ -81,7 +69,6 @@
         "webdev",
         "design"
       ],
-      "createdAt": "2026-08-17T03:09:16.780Z",
       "id": "iMm3c0fTJ8M"
     }
   ],

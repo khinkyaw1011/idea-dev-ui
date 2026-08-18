@@ -1,42 +1,46 @@
-import { createFileRoute } from '@tanstack/react-router'
+
+import { createFileRoute ,Link} from '@tanstack/react-router'
+import { Lightbulb } from 'lucide-react'
 import { queryOptions,useSuspenseQuery } from '@tanstack/react-query'
-import { fetchIdeas } from '../api/ideas';
-import IdeaCard from '../components/IdeaCard';
+import IdeaCard from '../components/IdeaCard'
+import { fetchIdeas } from '../api/ideas'
 
-
-
-const ideasQueryOptions = () =>
-  queryOptions({
-    queryKey: ['ideas'],
-    queryFn: () => fetchIdeas(),
-  });
 export const Route = createFileRoute('/')({
   component: IdeaPage,
-  loader: async ({ context: { queryClient } }) => {
-    return queryClient.ensureQueryData(ideasQueryOptions());
-  },
-
+  loader:({context})=>context.queryClient.ensureQueryData(ideaQueryOptions)
 })
-
+const ideaQueryOptions=queryOptions({
+  queryKey:['ideas'],
+  queryFn:fetchIdeas
+})
 function IdeaPage() {
+  const {data:ideas}=useSuspenseQuery
+  (ideaQueryOptions);
+  const latestIdea = [...ideas]
+  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0,3)
+  return <div
+  className="flex flex-col md:flex-row items-start justify-between gap-10 p-6 text-blue-600"
+>
+  <div className='flex flex-col items-start gap-4'>
+    <Lightbulb className="w-16 h-16 text-yellow-400" />
+    <h1 className="text-4xl font-bold text-gray-800">Welcome to IdeaDrop</h1>
+    <p className="text-gray-600 max-w-xs">
+      Share, explore, and build on the best startup ideas and side hustles.
+    </p>
+  </div>
 
-  const { data } = useSuspenseQuery(ideasQueryOptions())
-  // ရက်စွဲအသစ်ဆုံးကို ထိပ်ဆုံးမှာ ထားခြင်း
-  const ideas = [...data].sort(
-  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-  return <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Ideas</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {ideas.map((idea) => (
-        <IdeaCard  key={idea.id} idea={idea}/>
+  <section className="flex-1">
+    <h2 className="text-2xl font-semibold mb-4 text-gray-800">Latest Ideas</h2>
+    <div className="grid grid-cols-2 sm:grid-cols-1 gap-6">
+        {latestIdea.map((idea) => (
+        <IdeaCard idea={idea} key={idea.id} button={false} />
         ))}
+      <Link to='/ideas' className="bg-blue-600 text-center text-white px-4 py-2 rounded hover:bg-blue-700 transition">View All Idea</Link>
       </div>
-    </div>
+  </section>
+</div>
+
 }
-
-
-
 
 
 
